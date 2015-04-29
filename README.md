@@ -5,75 +5,38 @@ Varje request skickas med hjälp av antingen GET eller POST. Alla begäran skick
 Alla lösenord som skickas måste vara krypterade med sha1.
 
 ### User
-######Create new user
 
-user **POST**
-
-	input: username, password
-
-######Change password on current user
-
-user/:user **PUT**
-	
-	input: newPassword
-
-######Delete user
-
-user/:user **DELETE**
+| METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
+| ------------- |-------------| ------------- | ------------- |
+|**POST** user  |username, password| |  Create new user|
+|**PUT** user/:user |newPassword |   |Change password on current user | 
+|**DELETE** user/:user |         |   |Delete user|
 
 ###Friend
 
-######Return all user friends
-
-friend/:user **GET**
-
-	return array of friends
-
-######Add friend
-
-friend/:user **POST**
-
-	input: friend 
-
-######Delete friend connection
-
-friend/:user **DELETE**
-
-	input: friend
+| METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
+| ------------- |-------------| ------------- | ------------- |
+|**GET** friend/:user | | friends |  Return all user friends|
+|**POST** friend/:user | friend |   | Add friend | 
+|**DELETE** friend/:user |friend|   |Delete friend connection|
 	
 ###Login
 
-######Authorize user
 
-login **POST**
-
-	input: username, password
+| METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
+| ------------- |-------------| ------------- | ------------- |
+|**POST** login |username, password |  |  Authorize user|
 
 ###Poll
 
-######Add a new poll
-
-poll **POST**
-
-	input: question, alternative_one, alternative_two, receivers, questioner
-
-######Get polls to user
-
-poll/:user **GET**
-
-	returns array of polls
+| METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
+| ------------- |-------------| ------------- | ------------- |
+|**GET** poll/:user | | polls |  Get polls to user|
+|**POST** poll | question, alternative_one, alternative_two, receivers, questioner |   | Add a new poll | 
 
 ###Answer
 
-######Give answer
-
-answer/:pollid **POST**
-
-	input: username, answer
-
-######Get answer of poll
-
-answer/:pollid **GET**
-
-	return [null,1,2]
-
+| METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
+| ------------- |-------------| ------------- | ------------- |
+|**GET** answer/:pollid | | [null,1,2] |  Get answer of poll, null if not ready |
+|**POST** answer/:pollid | username, answer |   | Give answer to poll
