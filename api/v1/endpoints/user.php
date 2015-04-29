@@ -50,8 +50,8 @@ function changePassword($username, $newPassword){
 
 function deleteUser($username) {
     global $dbh;
-    echo $username;
 
+    //Since foreign references is used, we need to remove all friends to the user before deletion.
     deleteAllFriends($username);
 
     $sql = 'DELETE FROM Users WHERE username = ?';
@@ -63,8 +63,7 @@ function deleteUser($username) {
 }
 
 function deleteAllFriends($username){
-        global $dbh;
-    echo $username;
+    global $dbh;
 
     $sql = 'DELETE FROM FriendsWith WHERE userOne = ? OR userTwo = ?';
 

@@ -16,23 +16,6 @@ class MyAPI extends API
         parent::__construct($request);
     }
 
-    /**
-     * Example of an Endpoint
-     */
-    protected function example() {
-        if ($this->method == 'GET') {
-
-            echo "<pre>";
-            print_r($this->args[1]);
-            echo "</pre>";
-
-            //return "Your name is " . $this->User;
-            return $_SERVER['REMOTE_ADDR'];
-        } else {
-            return "Only accepts GET requests";
-        } 
-    }
-
     // User endpoint, for creating, changing and deleting user
     protected function user(){
         if( $this->method == 'POST'){ // Create user
@@ -45,7 +28,7 @@ class MyAPI extends API
 
         } elseif( $this->method == 'PUT') { // Change password
 
-            //Check if correct parameters
+            //Check if correct parameters and parameter set
             if(! isset( $this->args[0] ) || ! array_key_exists('newPassword', $this->request) )
                 return "Wrong Parameters"; 
 
