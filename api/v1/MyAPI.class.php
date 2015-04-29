@@ -9,6 +9,7 @@ require_once 'endpoints/poll.php';
 require_once 'endpoints/user.php';
 
 
+
 class MyAPI extends API
 {
     public function __construct($request, $origin) {
