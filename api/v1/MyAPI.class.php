@@ -1,14 +1,8 @@
 <?php
-/****
- $this->request array of parameters.
- $this->request['user'] == username.
-
-**/
-
-
 
 require_once 'API.class.php';
 require_once 'connect.php';
+
 
 class MyAPI extends API
 {
@@ -250,4 +244,10 @@ class MyAPI extends API
 	private function isGet() {
 		return $this->method == "GET";
 	}
+
+    require_once 'endpoints/answer.php';
+    require_once 'endpoints/friend.php';
+    require_once 'endpoints/login.php';
+    require_once 'endpoints/poll.php';
+    require_once 'endpoints/user.php';
 }
