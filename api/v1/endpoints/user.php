@@ -51,6 +51,18 @@ function changePassword($username, $newPassword){
 function deleteUser($username) {
     global $dbh;
 
+    //Check if user exist
+    $sql = 'SELECT COUNT(*) AS results FROM Users WHERE username = ?';
+
+    $q = $dbh->prepare($sql);
+    $q->execute([$username]);
+
+    $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
+
+    if( $results == 0 ){
+        return "User didn't exist.";
+    }
+
     //Since foreign references is used, we need to remove all friends to the user before deletion.
     deleteAllFriends($username);
 
