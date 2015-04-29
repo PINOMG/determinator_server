@@ -22,6 +22,10 @@ class MyAPI extends API
     protected function example() {
         if ($this->method == 'GET') {
 
+            echo "<pre>";
+            print_r($this->args[1]);
+            echo "</pre>";
+
             //return "Your name is " . $this->User;
             return $_SERVER['REMOTE_ADDR'];
         } else {
