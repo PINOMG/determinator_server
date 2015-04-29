@@ -23,7 +23,7 @@ friend/:user GET
 
 //Add friedn
 friend/:user POST
-	input: friend
+	input: friend 
 
 //Delete friend connection
 friend/:user DELETE
