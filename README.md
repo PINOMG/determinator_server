@@ -6,65 +6,74 @@ Alla lösenord som skickas måste vara krypterade med sha1.
 
 * betyder att användaren måste kunna autentiseras med hjälp av användarnamn (username) och lösenord (password)
 
-// Create new user
+### User
+######Create new user
 
 user POST
 
 	input: username, password
 
-// Change password on current user
+######Change password on current user
 
 user/:user PUT
 	
 	input: newPassword
 
-// Delete user
+######Delete user
 
 user/:user DELETE
 
-//Return all user friends
+###Friend
+
+######Return all user friends
 
 friend/:user GET
 
 	return array of friends
 
-//Add friedn
+######Add friend
 
 friend/:user POST
 
 	input: friend 
 
-//Delete friend connection
+######Delete friend connection
 
 friend/:user DELETE
 
 	input: friend
+	
+###Login
 
-//Authorize user
+######Authorize user
 
 login POST
 
 	input: username, password
 
-//Add a new poll
+###Poll
+
+######Add a new poll
 
 poll POST
 
 	input: question, alternative_one, alternative_two, receivers, questioner
 
-//Get polls to user
+######Get polls to user
 
 poll/:user GET
 
 	returns array of polls
 
-//Give answer
+###Answer
+
+######Give answer
 
 answer/:pollid POST
 
 	input: username, answer
 
-//Get answer of poll
+######Get answer of poll
 
 answer/:pollid GET
 
