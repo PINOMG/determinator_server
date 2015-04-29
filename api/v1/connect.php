@@ -5,7 +5,7 @@ if($dev){
 	DEFINE('DB_HOST', 'localhost');
 	DEFINE('DB_NAME', 'pinomg');
 	DEFINE('DB_USER', 'root');
-	DEFINE('DB_PASS', 'kantarell');
+	DEFINE('DB_PASS', '');
 } else {
 	DEFINE('DB_HOST', 'pinomg-202715.mysql.binero.se');
 	DEFINE('DB_NAME', '202715-pinomg');
