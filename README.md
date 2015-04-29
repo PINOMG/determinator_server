@@ -4,8 +4,6 @@ Varje request skickas med hjälp av antingen GET eller POST. Alla begäran skick
 
 Alla lösenord som skickas måste vara krypterade med sha1.
 
-* betyder att användaren måste kunna autentiseras med hjälp av användarnamn (username) och lösenord (password)
-
 ### User
 ######Create new user
 
