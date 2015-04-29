@@ -52,11 +52,24 @@ function deleteUser($username) {
     global $dbh;
     echo $username;
 
+    deleteAllFriends($username);
+
     $sql = 'DELETE FROM Users WHERE username = ?';
 
     $q = $dbh->prepare($sql);
     $q->execute([$username]);
 
     return "Success";
+}
 
+function deleteAllFriends($username){
+        global $dbh;
+    echo $username;
+
+    $sql = 'DELETE FROM FriendsWith WHERE userOne = ? OR userTwo = ?';
+
+    $q = $dbh->prepare($sql);
+    $q->execute([$username, $username]);
+
+    return "Success";
 }

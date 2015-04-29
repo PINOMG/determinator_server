@@ -58,7 +58,7 @@ class MyAPI extends API
                 return "Wrong Parameters"; 
 
             return deleteUser($this->args[0]);
-            
+
         } else {
             return null;
         }
