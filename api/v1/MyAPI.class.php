@@ -36,53 +36,32 @@ class MyAPI extends API
     // User endpoint, for creating, changing and deleting user
     protected function user(){
         if( $this->method == 'POST'){ // Create user
+
             //Check if correct parameters.
             if(! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) )
                 return "Wrong Parameters";
 
             return createUser($this->request['username'], $this->request['password']);
+
         } elseif( $this->method == 'PUT') { // Change password
+
             //Check if correct parameters
             if(! isset( $this->args[0] ) || ! array_key_exists('newPassword', $this->request) )
-                return "Wrong Parsameters"; 
+                return "Wrong Parameters"; 
 
             return changePassword($this->args[0], $this->request['newPassword']);
+
         } elseif( $this->method == 'DELETE') {
 
+            // Check if argument is set
+            if(! isset( $this->args[0] ) )
+                return "Wrong Parameters"; 
 
-            return null;
+            return deleteUser($this->args[0]);
+            
         } else {
             return null;
         }
-    }
-
-    protected function createUser() {
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        if( ! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) ){
-            return "Request on wrong form. Parameters not recognized.";
-        } 
-
-        
-    }
-
-    protected function deleteUser() {
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        if( ! $this->authenticatedUser() )
-            return "User is not authenticated";
-
-        global $dbh;
-
-        $sql = 'DELETE FROM Users WHERE username = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username']]);
-
-        return "Success";
-
     }
 
     protected function loginUser(){
