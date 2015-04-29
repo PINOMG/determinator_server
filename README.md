@@ -9,37 +9,37 @@ Alla lösenord som skickas måste vara krypterade med sha1.
 ### User
 ######Create new user
 
-user POST
+user **POST**
 
 	input: username, password
 
 ######Change password on current user
 
-user/:user PUT
+user/:user **PUT**
 	
 	input: newPassword
 
 ######Delete user
 
-user/:user DELETE
+user/:user **DELETE**
 
 ###Friend
 
 ######Return all user friends
 
-friend/:user GET
+friend/:user **GET**
 
 	return array of friends
 
 ######Add friend
 
-friend/:user POST
+friend/:user **POST**
 
 	input: friend 
 
 ######Delete friend connection
 
-friend/:user DELETE
+friend/:user **DELETE**
 
 	input: friend
 	
@@ -47,7 +47,7 @@ friend/:user DELETE
 
 ######Authorize user
 
-login POST
+login **POST**
 
 	input: username, password
 
@@ -55,13 +55,13 @@ login POST
 
 ######Add a new poll
 
-poll POST
+poll **POST**
 
 	input: question, alternative_one, alternative_two, receivers, questioner
 
 ######Get polls to user
 
-poll/:user GET
+poll/:user **GET**
 
 	returns array of polls
 
@@ -69,13 +69,13 @@ poll/:user GET
 
 ######Give answer
 
-answer/:pollid POST
+answer/:pollid **POST**
 
 	input: username, answer
 
 ######Get answer of poll
 
-answer/:pollid GET
+answer/:pollid **GET**
 
 	return [null,1,2]
 
