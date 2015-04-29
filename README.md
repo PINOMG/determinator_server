@@ -1,6 +1,6 @@
 # determinator_server
 
-Varje request skickas med hjälp av antingen GET eller POST. Alla begäran skickas till base_url/[method_name], där [method_name] ersätts av metoderna nedan. 
+Alla begäran skickas till base_url/[method_name], där [method_name] ersätts av metoderna nedan. 
 
 Alla lösenord som skickas måste vara krypterade med sha1.
 
@@ -9,16 +9,16 @@ Alla lösenord som skickas måste vara krypterade med sha1.
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
 |**POST** user  |username, password| |  Create new user|
-|**PUT** user/:user |newPassword |   |Change password on current user | 
-|**DELETE** user/:user |         |   |Delete user|
+|**PUT** user/*:user* |newPassword |   |Change password on current user | 
+|**DELETE** user/*:user* |         |   |Delete user|
 
 ###Friend
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
-|**GET** friend/:user | | friends |  Return all user friends|
-|**POST** friend/:user | friend |   | Add friend | 
-|**DELETE** friend/:user |friend|   |Delete friend connection|
+|**GET** friend/*:user* | | friends |  Return all user friends|
+|**POST** friend/*:user* | friend |   | Add friend | 
+|**DELETE** friend/*:user* |friend|   |Delete friend connection|
 	
 ###Login
 
@@ -31,12 +31,12 @@ Alla lösenord som skickas måste vara krypterade med sha1.
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
-|**GET** poll/:user | | polls |  Get polls to user|
+|**GET** poll/*:user* | | polls |  Get polls to user|
 |**POST** poll | question, alternative_one, alternative_two, receivers, questioner |   | Add a new poll | 
 
 ###Answer
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
-|**GET** answer/:pollid | | [null,1,2] |  Get answer of poll, null if not ready |
-|**POST** answer/:pollid | username, answer |   | Give answer to poll
+|**GET** answer/*:pollid* | | [null,1,2] |  Get answer of poll, null if not ready |
+|**POST** answer/*:pollid* | username, answer |   | Give answer to poll
