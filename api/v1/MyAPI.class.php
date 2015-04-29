@@ -2,7 +2,11 @@
 
 require_once 'API.class.php';
 require_once 'connect.php';
-
+require_once 'endpoints/answer.php';
+require_once 'endpoints/friend.php';
+require_once 'endpoints/login.php';
+require_once 'endpoints/poll.php';
+require_once 'endpoints/user.php';
 
 class MyAPI extends API
 {
@@ -27,6 +31,23 @@ class MyAPI extends API
         } 
     }
 
+    // User endpoint, for creating, changing and deleting user
+    protected function user(){
+        if( $this->method == 'POST'){
+            //Check if correct parameters.
+            if(! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) )
+                return "Wrong Parameters";
+
+            return createUser($this->request['username'], $this->request['password']);
+        } elseif( $this->method == 'PUT') {
+            return null;
+        } elseif( $this->method == 'DELETE') {
+            return null;
+        } else {
+            return null;
+        }
+    }
+
     protected function createUser() {
         if( ! $this->isPost() )
             return "Only accepts POST requests";
@@ -35,26 +56,7 @@ class MyAPI extends API
             return "Request on wrong form. Parameters not recognized.";
         } 
 
-        global $dbh;
-
-        //Check if user exists
-        $sql = 'SELECT COUNT(*) AS results FROM Users WHERE username = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username']]);
-
-        $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
-
-        if( $results > 0 ){
-            return "User already exists.";
-        }
-
-        //Create new user
-        $sql = 'INSERT INTO Users VALUES (?,?)';
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username'], $this->request['password']]);
-
-        return "Success";
+        
     }
 
     protected function deleteUser() {
@@ -245,9 +247,5 @@ class MyAPI extends API
 		return $this->method == "GET";
 	}
 
-    require_once 'endpoints/answer.php';
-    require_once 'endpoints/friend.php';
-    require_once 'endpoints/login.php';
-    require_once 'endpoints/poll.php';
-    require_once 'endpoints/user.php';
+
 }
