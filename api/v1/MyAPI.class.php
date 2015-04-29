@@ -202,6 +202,30 @@ class MyAPI extends API
         }
     }
 
+	protected function getFriends() {
+		if( ! $this->isGet() )
+			return "Only accepts GET requests";
+			
+		if( ! array_key_exists('username', $this->request) ){
+            return "Request on wrong form. Parameters not recognized.";
+        } 
+
+        global $dbh;
+
+		$sql = 'SELECT userTwo FROM FriendsWith WHERE userOne =?' ;
+		
+		$q = $dbh->prepare($sql);
+		$q->execute( [$this->request['username']]);
+		
+		$results = $q->fetchAll(PDO::FETCH_ASSOC);
+		
+		if (empty($results)) {
+			return "You have no friends!";
+		} else {
+			return $results;
+		}
+	}
+	
     private function authenticatedUser(){
         if( ! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) ){
             return "Request on wrong form. Parameters not recognized.";
@@ -222,4 +246,8 @@ class MyAPI extends API
     private function isPost(){
         return $this->method == 'POST';
     }
+	
+	private function isGet() {
+		return $this->method == "GET";
+	}
 }
