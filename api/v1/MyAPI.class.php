@@ -33,14 +33,18 @@ class MyAPI extends API
 
     // User endpoint, for creating, changing and deleting user
     protected function user(){
-        if( $this->method == 'POST'){
+        if( $this->method == 'POST'){ // Create user
             //Check if correct parameters.
             if(! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) )
                 return "Wrong Parameters";
 
             return createUser($this->request['username'], $this->request['password']);
-        } elseif( $this->method == 'PUT') {
-            return null;
+        } elseif( $this->method == 'PUT') { // Change password
+            //Check if correct parameters
+            if(! array_key_exists('username', $this->request) || ! array_key_exists('newPassword', $this->request) )
+                return "Wrong Parsameters"; 
+
+            return changePassword($this->request['username'], $this->request['newPassword']);
         } elseif( $this->method == 'DELETE') {
             return null;
         } else {
@@ -82,23 +86,6 @@ class MyAPI extends API
             return "Only accepts POST requests";
 
         return $this->authenticatedUser() ? "Success" : "Not authenticated";       
-    }
-
-    protected function changePassword(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        if( ! $this->authenticatedUser() )
-            return "User is not authenticated";
-
-        global $dbh;
-
-        $sql = 'UPDATE Users SET password = ? WHERE username = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['newPassword'], $this->request['username']]);
-
-        return "Success";
     }
 
     protected function addFriend(){

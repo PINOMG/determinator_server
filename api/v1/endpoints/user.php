@@ -23,3 +23,14 @@ function createUser($username, $password){
 
     return "Success";
 }
+
+function changePassword($username, $newPassword){
+    global $dbh;
+
+    $sql = 'UPDATE Users SET password = ? WHERE username = ?';
+
+    $q = $dbh->prepare($sql);
+    $q->execute([$newPassword, $username]);
+
+    return "Success";
+}
