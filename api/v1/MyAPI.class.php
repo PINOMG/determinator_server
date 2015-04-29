@@ -42,12 +42,10 @@ class MyAPI extends API
             return createUser($this->request['username'], $this->request['password']);
         } elseif( $this->method == 'PUT') { // Change password
             //Check if correct parameters
-
-            return $this->args;
             if(! isset( $this->args[0] ) || ! array_key_exists('newPassword', $this->request) )
                 return "Wrong Parsameters"; 
 
-            return changePassword($this->request['username'], $this->request['newPassword']);
+            return changePassword($this->args[0], $this->request['newPassword']);
         } elseif( $this->method == 'DELETE') {
 
 
