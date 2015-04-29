@@ -65,8 +65,8 @@ abstract class API
             $this->request = $this->_cleanInputs($_GET);
             break;
         case 'PUT':
-            $this->request = $this->_cleanInputs($_GET);
-            $this->file = file_get_contents("php://input");
+            parse_str(file_get_contents("php://input"),$post_vars);
+            $this->request = $this->_cleanInputs($post_vars);
             break;
         default:
             $this->_response('Invalid Method', 405);

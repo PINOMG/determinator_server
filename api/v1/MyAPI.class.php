@@ -8,6 +8,7 @@ require_once 'endpoints/login.php';
 require_once 'endpoints/poll.php';
 require_once 'endpoints/user.php';
 
+
 class MyAPI extends API
 {
     public function __construct($request, $origin) {
@@ -237,6 +238,4 @@ class MyAPI extends API
 	private function isGet() {
 		return $this->method == "GET";
 	}
-
-
 }
