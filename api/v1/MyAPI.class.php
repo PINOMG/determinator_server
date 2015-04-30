@@ -2,6 +2,13 @@
 
 require_once 'API.class.php';
 require_once 'connect.php';
+require_once 'endpoints/answer.php';
+require_once 'endpoints/friend.php';
+require_once 'endpoints/login.php';
+require_once 'endpoints/poll.php';
+require_once 'endpoints/user.php';
+
+
 
 
 class MyAPI extends API
@@ -10,69 +17,35 @@ class MyAPI extends API
         parent::__construct($request);
     }
 
-    /**
-     * Example of an Endpoint
-     */
-    protected function example() {
-        if ($this->method == 'GET') {
+    // User endpoint, for creating, changing and deleting user
+    protected function user(){
+        if( $this->method == 'POST'){ // Create user
 
-            echo "<pre>";
-            print_r($this->args[1]);
-            echo "</pre>";
+            //Check if correct parameters.
+            if(! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) )
+                return "Wrong Parameters";
 
-            //return "Your name is " . $this->User;
-            return $_SERVER['REMOTE_ADDR'];
+            return createUser($this->request['username'], $this->request['password']);
+
+        } elseif( $this->method == 'PUT') { // Change password
+
+            //Check if correct parameters and parameter set
+            if(! isset( $this->args[0] ) || ! array_key_exists('newPassword', $this->request) )
+                return "Wrong Parameters"; 
+
+            return changePassword($this->args[0], $this->request['newPassword']);
+
+        } elseif( $this->method == 'DELETE') {
+
+            // Check if argument is set
+            if(! isset( $this->args[0] ) )
+                return "Wrong Parameters"; 
+
+            return deleteUser($this->args[0]);
+
         } else {
-            return "Only accepts GET requests";
-        } 
-    }
-
-    protected function createUser() {
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        if( ! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) ){
-            return "Request on wrong form. Parameters not recognized.";
-        } 
-
-        global $dbh;
-
-        //Check if user exists
-        $sql = 'SELECT COUNT(*) AS results FROM Users WHERE username = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username']]);
-
-        $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
-
-        if( $results > 0 ){
-            return "User already exists.";
+            return null;
         }
-
-        //Create new user
-        $sql = 'INSERT INTO Users VALUES (?,?)';
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username'], $this->request['password']]);
-
-        return "Success";
-    }
-
-    protected function deleteUser() {
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        if( ! $this->authenticatedUser() )
-            return "User is not authenticated";
-
-        global $dbh;
-
-        $sql = 'DELETE FROM Users WHERE username = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username']]);
-
-        return "Success";
-
     }
 
     protected function loginUser(){
@@ -80,23 +53,6 @@ class MyAPI extends API
             return "Only accepts POST requests";
 
         return $this->authenticatedUser() ? "Success" : "Not authenticated";       
-    }
-
-    protected function changePassword(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        if( ! $this->authenticatedUser() )
-            return "User is not authenticated";
-
-        global $dbh;
-
-        $sql = 'UPDATE Users SET password = ? WHERE username = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['newPassword'], $this->request['username']]);
-
-        return "Success";
     }
 
     protected function addFriend(){
