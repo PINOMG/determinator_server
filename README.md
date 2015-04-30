@@ -24,7 +24,7 @@ object {
 }*;
 ```
 
-Notice: The JSON response should contain either a data object or an error object, but not both. If both data and error are present, the error object takes precedence.
+*Notice*: The JSON response should contain either a data object or an error object, but not both. If both data and error are present, the error object takes precedence.
 
 ##Requests
 ###User endpoint
