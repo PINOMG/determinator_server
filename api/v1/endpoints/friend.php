@@ -7,7 +7,7 @@ function getFriends($username) {
 	$sql = 'SELECT userTwo FROM FriendsWith WHERE userOne =?' ;
 		
 	$q = $dbh->prepare($sql);
-	$q->execute([$username]);
+	$q->execute( [$username] );
 		
 	$results = $q->fetchAll(PDO::FETCH_ASSOC);
 		
@@ -32,7 +32,7 @@ function addFriend($username, $userTwo) {
             ) AS mu';
 
     $q = $dbh->prepare($sql);
-    $q->execute([$username,$userTwo,$userTwo,$username]);
+    $q->execute( [$username, $userTwo, $userTwo, $username] );
 
     $results = $q->fetch(PDO::FETCH_ASSOC)['results']; 
 
@@ -44,7 +44,7 @@ function addFriend($username, $userTwo) {
     $sql = 'INSERT INTO FriendsWith VALUES (?,?)';
 
     $q = $dbh->prepare($sql);
-    $q->execute([$username,$userTwo]);
+    $q->execute( [$username, $userTwo] );
 
     return "Success";
 }
@@ -56,13 +56,13 @@ function deleteFriend($username, $userTwo) {
     $sql = 'DELETE FROM FriendsWith WHERE userOne = ? AND userTwo = ?';
 
     $q = $dbh->prepare($sql);
-    $q->execute([$username,$userTwo]);
+    $q->execute( [$username, $userTwo] );
 
     // Second plausible combination
     $sql = 'DELETE FROM FriendsWith WHERE userOne = ? AND userTwo = ?';
 
     $q = $dbh->prepare($sql);
-    $q->execute([$userTwo,$username]);
+    $q->execute( [$userTwo, $username] );
 	
     return "Success";
 }
