@@ -4,6 +4,19 @@
 function getFriends($username) {
 	global $dbh;
 	
+	//Check if user exists
+	$sql = 'SELECT COUNT(*) AS result FROM Users WHERE username = ?';
+	
+	$q = $dbh->prepare($sql);
+	$q->execute( [$username] );
+	
+	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
+	
+	if( $result == 0 ){
+        return "User doesn't exists.";
+    }
+	
+	// Get friends
 	$sql = 'SELECT userTwo FROM FriendsWith WHERE userOne =?' ;
 		
 	$q = $dbh->prepare($sql);
@@ -21,6 +34,30 @@ function getFriends($username) {
 //Function to add a new friends
 function addFriend($username, $userTwo) {
 	global $dbh;
+	
+	//Check if user exists
+	$sql = 'SELECT COUNT(*) AS result FROM Users WHERE username = ?';
+	
+	$q = $dbh->prepare($sql);
+	$q->execute( [$username] );
+	
+	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
+	
+	if( $result == 0 ){
+        return "User doesn't exists.";
+    }
+	
+	//Check if userTwo exists
+	$sql = 'SELECT COUNT(*) AS result FROM Users WHERE username = ?';
+	
+	$q = $dbh->prepare($sql);
+	$q->execute( [$userTwo] );
+	
+	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
+	
+	if( $result == 0 ){
+        return "UserTwo doesn't exists.";
+    }
 
 	//Check if userTwo already is a friend of the user
     $sql = 'SELECT COUNT(*) AS results FROM (
@@ -51,7 +88,19 @@ function addFriend($username, $userTwo) {
 
 function deleteFriend($username, $userTwo) {
 	global $dbh;
-
+	
+	//Check if user exists
+	$sql = 'SELECT COUNT(*) AS result FROM Users WHERE username = ?';
+	
+	$q = $dbh->prepare($sql);
+	$q->execute( [$username] );
+	
+	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
+	
+	if( $result == 0 ){
+        return "User doesn't exists.";
+    }
+	
 	//First combination
     $sql = 'DELETE FROM FriendsWith WHERE userOne = ? AND userTwo = ?';
 
