@@ -8,9 +8,6 @@ require_once 'endpoints/login.php';
 require_once 'endpoints/poll.php';
 require_once 'endpoints/user.php';
 
-
-
-
 class MyAPI extends API
 {
     public function __construct($request, $origin) {
@@ -55,73 +52,51 @@ class MyAPI extends API
         return $this->authenticatedUser() ? "Success" : "Not authenticated";       
     }
 
-    protected function addFriend(){
+    protected function changePassword(){
         if( ! $this->isPost() )
             return "Only accepts POST requests";
 
+        if( ! $this->authenticatedUser() )
+            return "User is not authenticated";
+
         global $dbh;
 
-        $sql = 'SELECT COUNT(*) AS results FROM (
-                    SELECT * FROM FriendsWith 
-                    WHERE userOne = ? AND userTwo = ?
-                UNION 
-                    SELECT * FROM FriendsWith
-                    WHERE userOne = ? AND userTwo = ? 
-                ) AS mu';
+        $sql = 'UPDATE Users SET password = ? WHERE username = ?';
 
         $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['username'],
-            $this->request['userTwo'],
-            $this->request['userTwo'],
-            $this->request['username']
-        ]);
-
-
-        $results = $q->fetch(PDO::FETCH_ASSOC)['results']; 
-
-        if( $results > 0 ){
-            return "Friends already exists";
-        } 
-
-        $sql = 'INSERT INTO FriendsWith VALUES (?,?)';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['username'],
-            $this->request['userTwo']
-        ]);
+        $q->execute([$this->request['newPassword'], $this->request['username']]);
 
         return "Success";
     }
 
-    protected function deleteFriend(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        global $dbh;
-
-
-        //First combination
-        $sql = 'DELETE FROM FriendsWith WHERE userOne = ? AND userTwo = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['username'],
-            $this->request['userTwo']
-        ]);
-
-
-        // Second plausible combination
-        $sql = 'DELETE FROM FriendsWith WHERE userOne = ? AND userTwo = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['userTwo'],
-            $this->request['username']
-        ]);
-
-        return "Success";
+	//Friend endpoint, for adding friend, getting all friends and deleting friend
+    protected function friend() {
+	
+        if( $this->isPost() ) { // Add friend
+			
+			//Check parameters
+			if(! isset( $this->args[0] ) || ! array_key_exists('userTwo', $this->request) )
+                return "Wrong Parameters"; 
+				
+			return addFriend( $this->args[0], $this->request['userTwo'] );
+			
+		} elseif ($this->isGet() ) { // Get friends
+		
+			//Check parameters
+			if(! isset( $this->args[0] ) )
+                return "Wrong Parameters"; 
+			
+			return getFriends($this->args[0]);
+			
+		} elseif( $this->method == 'DELETE') {
+		
+			//Check parameters
+			if(! isset( $this->args[0] ) || ! array_key_exists('userTwo', $this->request) )
+                return "Wrong Parameters"; 
+			
+			return deleteFriend( $this->args[0], $this->request['userTwo'] );
+			
+		}
     }
 
     protected function createPoll(){
@@ -151,30 +126,6 @@ class MyAPI extends API
             # code...
         }
     }
-
-	protected function getFriends() {
-		if( ! $this->isGet() )
-			return "Only accepts GET requests";
-			
-		if( ! array_key_exists('username', $this->request) ){
-            return "Request on wrong form. Parameters not recognized.";
-        } 
-
-        global $dbh;
-
-		$sql = 'SELECT userTwo FROM FriendsWith WHERE userOne =?' ;
-		
-		$q = $dbh->prepare($sql);
-		$q->execute( [$this->request['username']]);
-		
-		$results = $q->fetchAll(PDO::FETCH_ASSOC);
-		
-		if (empty($results)) {
-			return "You have no friends!";
-		} else {
-			return $results;
-		}
-	}
 	
     private function authenticatedUser(){
         if( ! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) ){
@@ -200,10 +151,4 @@ class MyAPI extends API
 	private function isGet() {
 		return $this->method == "GET";
 	}
-
-    require_once 'endpoints/answer.php';
-    require_once 'endpoints/friend.php';
-    require_once 'endpoints/login.php';
-    require_once 'endpoints/poll.php';
-    require_once 'endpoints/user.php';
 }
