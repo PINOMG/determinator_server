@@ -55,6 +55,8 @@ abstract class API
 
         switch($this->method) {
             case 'DELETE':
+                $this->request = $this->_cleanInputs($_GET);
+                break;
             case 'POST':
                 $this->request = $this->_cleanInputs($_POST);
                 break;
