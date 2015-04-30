@@ -3,6 +3,8 @@ All requests are sent to base_url/[method_name], where [method_name] is replaced
 
 All passwords sent must be encrypted with the sha1-algorithm.
 
+
+##Response
 Responses are structured according to a modified version of Google JSON Style Guide, as below:
 
 ```
@@ -24,7 +26,8 @@ object {
 
 Notice: The JSON response should contain either a data object or an error object, but not both. If both data and error are present, the error object takes precedence.
 
-### User
+##Requests
+###User endpoint
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
@@ -32,7 +35,7 @@ Notice: The JSON response should contain either a data object or an error object
 |**PUT** user/*:user* |newPassword |   |Change password on current user | 
 |**DELETE** user/*:user* |         |   |Delete user|
 
-###Friend
+###Friend endpoint
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
@@ -40,21 +43,20 @@ Notice: The JSON response should contain either a data object or an error object
 |**POST** friend/*:user* | friend |   | Add friend | 
 |**DELETE** friend/*:user* |friend|   |Delete friend connection|
 	
-###Login
-
+###Login endpoint
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
 |**POST** login |username, password |  |  Authorize user|
 
-###Poll
+###Poll endpoint
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
 |**GET** poll/*:user* | | polls |  Get polls to user|
 |**POST** poll | question, alternative_one, alternative_two, receivers, questioner |   | Add a new poll | 
 
-###Answer
+###Answer endpoint
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
