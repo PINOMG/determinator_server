@@ -22,9 +22,9 @@ function getFriends($username) {
 	$q = $dbh->prepare($sql);
 	$q->execute( [$username] );
 		
-	$results = $q->fetchAll(PDO::FETCH_ASSOC);
-		
-	return $results;
+	$results = $q->fetchAll(PDO::FETCH_COLUMN, 0);
+
+	return ($results);
 }
 
 //Function to add a new friends
