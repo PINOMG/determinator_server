@@ -24,11 +24,7 @@ function getFriends($username) {
 		
 	$results = $q->fetchAll(PDO::FETCH_ASSOC);
 		
-	if (empty($results)) {
-		return "You have no friends!";
-	} else {
-		return $results;
-	}
+	return $results;
 }
 
 //Function to add a new friends
