@@ -1,8 +1,26 @@
 # determinator_server
+All requests are sent to base_url/[method_name], where [method_name] is replaced by the methods below.
 
-Alla begäran skickas till base_url/[method_name], där [method_name] ersätts av metoderna nedan. 
+All passwords sent must be encrypted with the sha1-algorithm.
 
-Alla lösenord som skickas måste vara krypterade med sha1.
+Responses are structured according to a modified version of Google JSON Style Guide, as below:
+
+object {
+  string apiVersion?;
+  string method?;
+  object {
+    string message?;
+    array [
+      object {}*;
+    ] items?;
+  }* data?;
+  object {
+    integer code?;
+    string message?;
+  }* error?;
+}*;
+
+Notice: The JSON response should contain either a data object or an error object, but not both. If both data and error are present, the error object takes precedence.
 
 ### User
 
