@@ -5,6 +5,7 @@ All passwords sent must be encrypted with the sha1-algorithm.
 
 Responses are structured according to a modified version of Google JSON Style Guide, as below:
 
+```
 object {
   string apiVersion?;
   string method?;
@@ -19,6 +20,7 @@ object {
     string message?;
   }* error?;
 }*;
+```
 
 Notice: The JSON response should contain either a data object or an error object, but not both. If both data and error are present, the error object takes precedence.
 
