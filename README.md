@@ -38,5 +38,5 @@ Alla lösenord som skickas måste vara krypterade med sha1.
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
-|**GET** answer/*:pollid* | | [0,1,2] |  Get answer of poll, null if not ready |
+|**GET** answer/*:pollid* | | [0,1,2] |  Get answer of poll, 0 if not ready |
 |**POST** answer/*:pollid* | username, answer |   | Give answer to poll
