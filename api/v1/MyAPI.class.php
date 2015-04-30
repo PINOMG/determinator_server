@@ -45,11 +45,15 @@ class MyAPI extends API
         }
     }
 
-    protected function loginUser(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
+    protected function login(){
+        if( $this->isPost() ){
+            if(! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) )
+                return "Wrong Parameters";
 
-        return $this->authenticatedUser() ? "Success" : "Not authenticated";       
+            return login($this->request['username'], $this->request['password']);
+        } else {
+            return null; //Add error handling here.
+        }
     }
 
     protected function changePassword(){
@@ -125,23 +129,6 @@ class MyAPI extends API
         foreach ($receivers as $receiver) {
             # code...
         }
-    }
-	
-    private function authenticatedUser(){
-        if( ! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) ){
-            return "Request on wrong form. Parameters not recognized.";
-        } 
-
-        global $dbh;
-
-        $sql = 'SELECT COUNT(*) AS results FROM Users WHERE username = ? AND password = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username'], $this->request['password']]);
-
-        $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
-
-        return $results > 0;
     }
 
     private function isPost(){
