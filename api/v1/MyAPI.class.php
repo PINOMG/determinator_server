@@ -84,7 +84,7 @@ class MyAPI extends API
 		
 			//Check parameters
 			if(! isset( $this->args[0] ) )
-                return "Wrong Parameters"; 
+                throw new Exception("Error Processing Request", 1);
 			
 			return getFriends($this->args[0]);
 			
