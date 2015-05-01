@@ -39,6 +39,8 @@ abstract class API
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
 
+        $this->version = 1.0;
+
         $this->args = explode('/', rtrim($request, '/'));
         $this->endpoint = array_shift($this->args);
 
@@ -80,9 +82,21 @@ abstract class API
         return $this->_response("No Endpoint: $this->endpoint", 404);
     }
 
+    public function getMethod(){
+        return $this->method;
+    }
+
+    public function getEndpoint(){
+        return $this->endpoint;
+    }
+
+    public function getVersion(){
+        return $this->version;
+    }
+
     private function _response($data, $status = 200) {
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
-        return json_encode($data);
+        return $data;
     }
 
     private function _cleanInputs($data) {
