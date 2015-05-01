@@ -12,9 +12,8 @@ function createUser($username, $password){
 
     $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
 
-    if( $results > 0 ){
-        return "User already exists.";
-    }
+    if( $results > 0 )
+        throw new Exception("Username already taken.", ERROR_USERNAME_TAKEN);
 
     //Create new user
     $sql = 'INSERT INTO Users VALUES (?,?)';
@@ -35,9 +34,8 @@ function changePassword($username, $newPassword){
 
     $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
 
-    if( $results == 0 ){
-        return "User doesn't exists.";
-    }
+    if( $results == 0 )
+        throw new Exception("Provided user doesn't exist.", ERROR_USER_NOT_FOUND);
 
     // User exist. update pass.
     $sql = 'UPDATE Users SET password = ? WHERE username = ?';
@@ -59,9 +57,8 @@ function deleteUser($username) {
 
     $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
 
-    if( $results == 0 ){
-        return "User didn't exist.";
-    }
+    if( $results == 0 )
+        throw new Exception("Provided user doesn't exist.", ERROR_USER_NOT_FOUND);        
 
     //Since foreign references is used, we need to remove all friends to the user before deletion.
     deleteAllFriends($username);

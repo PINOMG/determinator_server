@@ -1,10 +1,10 @@
 <?php
 function newAnswer($pollId, $username, $answer) {
 	global $dbh;
-	//Check if there already is a result
+	//Check if there already is a result. This is not an error.
 	$res = getResult($pollId);
 	if($res > 0)
-		return "getResult";
+		return "Result already finished";
 
 	//Check if user/poll combination exist
     $sql = 'SELECT COUNT(*) AS result FROM PollsAskedToUsers WHERE poll = ? AND user = ?';
@@ -15,7 +15,7 @@ function newAnswer($pollId, $username, $answer) {
 	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
 	
 	if( $result == 0 ){
-        return "Poll wasn't asked to user.";
+        throw new Exception("Poll wasn't asked to user.", ERROR_POLL_NOT_TO_USER);
     }
 
     //Update answer
@@ -75,7 +75,6 @@ function haveResult($pollId){
 
 function registerResult($pollId, $answer){
 	global $dbh;
-
 
 	$sql = 'UPDATE Polls SET result = ? WHERE id = ?';
 	

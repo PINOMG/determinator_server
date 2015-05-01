@@ -10,5 +10,8 @@ function login($username,$password){
 
     $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
 
-    return ( $results > 0 ) ? "Success" : "Wrong credentials";
+    if( $results > 0 )
+    	return "Success";
+    else
+    	throw new Exception("Wrong credentials.", ERROR_WRONG_CREDENTIALS);
 }
