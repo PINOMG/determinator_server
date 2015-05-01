@@ -103,6 +103,22 @@ class MyAPI extends API
 		}
     }
 
+    protected function answer(){
+        if ( $this->isPost() ){
+            if( ! isset( $this->args[0] ) ||
+                ! array_key_exists('username', $this->request) || 
+                ! array_key_exists('answer', $this->request) )
+                return "Wrong Parameters"; 
+
+            return newAnswer($this->args[0], $this->request['username'], $this->request['answer']);
+        } elseif ( $this->isGet() ) {
+            if( ! isset( $this->args[0] ) )
+                return "Wrong parameters";
+
+            return getResult($this->args[0]);
+        }
+    }
+
     protected function createPoll(){
         if( ! $this->isPost() )
             return "Only accepts POST requests";
