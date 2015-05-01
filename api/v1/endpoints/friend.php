@@ -17,10 +17,12 @@ function getFriends($username) {
     }
 	
 	// Get friends
-	$sql = 'SELECT userTwo FROM FriendsWith WHERE userOne =?' ;
+	$sql = 'SELECT userTwo AS user FROM FriendsWith WHERE userOne = ?
+                UNION
+            SELECT userOne AS user FROM FriendsWith WHERE userTwo = ?' ;
 		
 	$q = $dbh->prepare($sql);
-	$q->execute( [$username] );
+	$q->execute( [$username, $username] );
 		
 	$results = $q->fetchAll(PDO::FETCH_COLUMN, 0);
 
