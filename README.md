@@ -82,17 +82,17 @@ Below is an example of a response from request **GET** *friend/Björn*.
 ```
 ###Error codes
 
-####System specific
+#### System specific
 **1** Parameters not correct.
 
 **2** Specified endpoint not found.
 
 **3** Endpoint not supporting HTTP method.
 
-####Answer
+#### Answer
 **4** Poll wasn't asked to user.
 
-####Login
+#### Login
 **5** Wrong credentials.
 
 **6** Username already taken.
@@ -100,6 +100,7 @@ Below is an example of a response from request **GET** *friend/Björn*.
 #### General
 **7** Provided user doesn't exist.
 
+#### Friends
 **8** Provided userTwo doesn't exist.
 
 **9** Provided users are already friends.
