@@ -35,7 +35,7 @@ function successResponse($API, $input){
 	if( is_array($input) )
 		$arr['data']['items'] = $input;
 	else 
-		$arr['data']['message'] = $message;
+		$arr['data']['message'] = $input;
 
 	return json_encode($arr);
 }
