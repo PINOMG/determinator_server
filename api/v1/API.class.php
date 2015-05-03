@@ -39,11 +39,10 @@ abstract class API
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
 
+        $this->version = 1.0;
+
         $this->args = explode('/', rtrim($request, '/'));
         $this->endpoint = array_shift($this->args);
-        if (array_key_exists(0, $this->args) && !is_numeric($this->args[0])) {
-            $this->verb = array_shift($this->args);
-        }
 
         $this->method = $_SERVER['REQUEST_METHOD'];
         if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER)) {
@@ -57,20 +56,22 @@ abstract class API
         }
 
         switch($this->method) {
-        case 'DELETE':
-        case 'POST':
-            $this->request = $this->_cleanInputs($_POST);
-            break;
-        case 'GET':
-            $this->request = $this->_cleanInputs($_GET);
-            break;
-        case 'PUT':
-            $this->request = $this->_cleanInputs($_GET);
-            $this->file = file_get_contents("php://input");
-            break;
-        default:
-            $this->_response('Invalid Method', 405);
-            break;
+            case 'DELETE':
+                $this->request = $this->_cleanInputs($_GET);
+                break;
+            case 'POST':
+                $this->request = $this->_cleanInputs($_POST);
+                break;
+            case 'GET':
+                $this->request = $this->_cleanInputs($_GET);
+                break;
+            case 'PUT':
+                parse_str(file_get_contents("php://input"),$post_vars);
+                $this->request = $this->_cleanInputs($post_vars);
+                break;
+            default:
+                $this->_response('Invalid Method', 405);
+                break;
         }
     }
 
@@ -78,12 +79,26 @@ abstract class API
         if ((int)method_exists($this, $this->endpoint) > 0) {
             return $this->_response($this->{$this->endpoint}($this->args));
         }
-        return $this->_response("No Endpoint: $this->endpoint", 404);
+        
+        throw new Exception("Specified endpoint not found", ERROR_NO_ENDPOINT);
+        
+    }
+
+    public function getMethod(){
+        return $this->method;
+    }
+
+    public function getEndpoint(){
+        return $this->endpoint;
+    }
+
+    public function getVersion(){
+        return $this->version;
     }
 
     private function _response($data, $status = 200) {
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
-        return json_encode($data);
+        return $data;
     }
 
     private function _cleanInputs($data) {

@@ -7,7 +7,35 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
 
 try {
     $API = new MyAPI($_REQUEST['request'], $_SERVER['HTTP_ORIGIN']);
-    echo $API->processAPI();
+    echo successResponse($API, $API->processAPI());
 } catch (Exception $e) {
-    echo json_encode(Array('error' => $e->getMessage()));
+    echo errorResponse($API, $e->getMessage(), $e->getCode());
+}
+
+function errorResponse($API, $message, $code){
+	return json_encode(Array(
+		'apiVersion' => $API->getVersion(),
+		'method' => $API->getEndpoint().'.'.$API->getMethod(),
+		'error' => Array(
+			'code' => $code,
+			'message' => $message
+		)
+	));
+}
+
+function successResponse($API, $input){
+	$arr = Array(
+		'apiVersion' => $API->getVersion(),
+		'method' => $API->getEndpoint().'.'.$API->getMethod(),
+		'data' => Array(
+			
+		)
+	);
+
+	if( is_array($input) )
+		$arr['data']['items'] = $input;
+	else 
+		$arr['data']['message'] = $input;
+
+	return json_encode($arr);
 }

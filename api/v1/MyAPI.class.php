@@ -1,14 +1,32 @@
 <?php
-/****
- $this->request array of parameters.
- $this->request['user'] == username.
 
-**/
-
-
+/*** Constants for error codes. ***/
+ //"Parameters not correct." 
+DEFINE("ERROR_WRONG_PARAMS", 1);
+ //"Specified endpoint not found." 
+DEFINE("ERROR_NO_ENDPOINT", 2);
+ //"Endpoint not supporting HTTP method." 
+DEFINE("ERROR_NO_METHOD", 3);
+ //"Poll wasn't asked to user." 
+DEFINE("ERROR_POLL_NOT_TO_USER", 4);
+ //"Wrong credentials."  
+DEFINE("ERROR_WRONG_CREDENTIALS", 5);
+ // "Username already taken."  
+DEFINE("ERROR_USERNAME_TAKEN", 6);
+ // "Provided user doesn't exist." 
+DEFINE("ERROR_USER_NOT_FOUND", 7);
+ //"Provided userTwo doesn't exist." 
+DEFINE("ERROR_USERTWO_NOT_FOUND", 8);
+ //"Provided users are already friends." 
+DEFINE("ERROR_ALREADY_FRIENDS", 9);
 
 require_once 'API.class.php';
 require_once 'connect.php';
+require_once 'endpoints/answer.php';
+require_once 'endpoints/friend.php';
+require_once 'endpoints/login.php';
+require_once 'endpoints/poll.php';
+require_once 'endpoints/user.php';
 
 class MyAPI extends API
 {
@@ -16,235 +34,145 @@ class MyAPI extends API
         parent::__construct($request);
     }
 
-    /**
-     * Example of an Endpoint
-     */
-    protected function example() {
-        if ($this->method == 'GET') {
+    // User endpoint, for creating, changing and deleting user
+    protected function user(){
+        if( $this->isPost() ){ // Create user
 
-            echo "<pre>";
-            print_r($this->args[1]);
-            echo "</pre>";
+            //Check if correct parameters.
+            if(! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) )
+                throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS);
+                
 
-            //return "Your name is " . $this->User;
-            return $_SERVER['REMOTE_ADDR'];
+            return createUser($this->request['username'], $this->request['password']);
+
+        } elseif( $this->isPut() ) { // Change password
+
+            //Check if correct parameters and parameter set
+            if(! isset( $this->args[0] ) || ! array_key_exists('newPassword', $this->request) )
+                throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS); 
+
+            return changePassword($this->args[0], $this->request['newPassword']);
+
+        } elseif( $this->isDelete()) {
+
+            // Check if argument is set
+            if(! isset( $this->args[0] ) )
+                throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS);
+
+            return deleteUser($this->args[0]);
+
         } else {
-            return "Only accepts GET requests";
-        } 
-    }
-
-    protected function createUser() {
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        if( ! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) ){
-            return "Request on wrong form. Parameters not recognized.";
-        } 
-
-        global $dbh;
-
-        //Check if user exists
-        $sql = 'SELECT COUNT(*) AS results FROM Users WHERE username = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username']]);
-
-        $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
-
-        if( $results > 0 ){
-            return "User already exists.";
+            throw new Exception("Endpoint not supporting used HTTP method", ERROR_NO_METHOD);
         }
-
-        //Create new user
-        $sql = 'INSERT INTO Users VALUES (?,?)';
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username'], $this->request['password']]);
-
-        return "Success";
     }
 
-    protected function deleteUser() {
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
+    protected function login(){
+        if( $this->isPost() ){
+            if(! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) )
+                throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS);
 
-        if( ! $this->authenticatedUser() )
-            return "User is not authenticated";
-
-        global $dbh;
-
-        $sql = 'DELETE FROM Users WHERE username = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username']]);
-
-        return "Success";
-
+            return login($this->request['username'], $this->request['password']);
+        } else {
+            throw new Exception("Endpoint not supporting used HTTP method", ERROR_NO_METHOD);
+        }
     }
 
-    protected function loginUser(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
+	//Friend endpoint, for adding friend, getting all friends and deleting friend
+    protected function friend() {
+	
+        if( $this->isPost() ) { // Add friend
+			
+			//Check parameters
+			if(! isset( $this->args[0] ) || ! array_key_exists('userTwo', $this->request) )
+                throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS);
+				
+			return addFriend( $this->args[0], $this->request['userTwo'] );
+			
+		} elseif ($this->isGet() ) { // Get friends
+		
+			//Check parameters
+			if(! isset( $this->args[0] ) )
+                throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS);
+			
+			return getFriends($this->args[0]);
+			
+		} elseif( $this->isDelete() ) {
+		
+			//Check parameters
+			if(! isset( $this->args[0] ) || ! array_key_exists('userTwo', $this->request) )
+                throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS);
+			
+			return deleteFriend( $this->args[0], $this->request['userTwo'] );
+			
+		} else {
+            throw new Exception("Endpoint not supporting used HTTP method", ERROR_NO_METHOD);
 
-        return $this->authenticatedUser() ? "Success" : "Not authenticated";       
+        }
     }
 
-    protected function changePassword(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
+    protected function answer(){
+        if ( $this->isPost() ){
+            if( ! isset( $this->args[0] ) ||
+                ! array_key_exists('username', $this->request) || 
+                ! array_key_exists('answer', $this->request) )
+                throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS);
 
-        if( ! $this->authenticatedUser() )
-            return "User is not authenticated";
+            return newAnswer($this->args[0], $this->request['username'], $this->request['answer']);
+        } elseif ( $this->isGet() ) {
+            if( ! isset( $this->args[0] ) )
+                throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS);
 
-        global $dbh;
-
-        $sql = 'UPDATE Users SET password = ? WHERE username = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['newPassword'], $this->request['username']]);
-
-        return "Success";
+            return getResult($this->args[0]);
+        } else {
+            throw new Exception("Endpoint not supporting used HTTP method", ERROR_NO_METHOD);
+        }
     }
 
-    protected function addFriend(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        global $dbh;
-
-        $sql = 'SELECT COUNT(*) AS results FROM (
-                    SELECT * FROM FriendsWith 
-                    WHERE userOne = ? AND userTwo = ?
-                UNION 
-                    SELECT * FROM FriendsWith
-                    WHERE userOne = ? AND userTwo = ? 
-                ) AS mu';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['username'],
-            $this->request['userTwo'],
-            $this->request['userTwo'],
-            $this->request['username']
-        ]);
-
-
-        $results = $q->fetch(PDO::FETCH_ASSOC)['results']; 
-
-        if( $results > 0 ){
-            return "Friends already exists";
-        } 
-
-        $sql = 'INSERT INTO FriendsWith VALUES (?,?)';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['username'],
-            $this->request['userTwo']
-        ]);
-
-        return "Success";
-    }
-
-    protected function deleteFriend(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        global $dbh;
-
-
-        //First combination
-        $sql = 'DELETE FROM FriendsWith WHERE userOne = ? AND userTwo = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['username'],
-            $this->request['userTwo']
-        ]);
-
-
-        // Second plausible combination
-        $sql = 'DELETE FROM FriendsWith WHERE userOne = ? AND userTwo = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['userTwo'],
-            $this->request['username']
-        ]);
-
-        return "Success";
-    }
-
-    protected function createPoll(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        if( ! array_key_exists('question', $this->request) || 
+	//Poll endpoint, for getting and creating polls
+	protected function poll() {
+		
+		if( $this->isGet() ) { // Get polls
+			
+			// Check parameters
+			if(! isset( $this->args[0] ) )
+                return "Wrong Parameters";
+				
+			return getPolls($this->args[0]);
+		
+		} elseif( $this->isPost() ) { // Create poll
+			
+			//Check parameters
+			if( ! array_key_exists('question', $this->request) || 
             ! array_key_exists('alternative_one', $this->request) ||
             ! array_key_exists('alternative_two', $this->request) ||
-            ! array_key_exists('receivers', $this->request) ){
-            return "Request on wrong form. Parameters not recognized.";
-        } 
-
-        $receivers = json_decode($this->request['receivers']);
-
-        $sql = 'INSERT INTO Polls (question, alternative_one, alternative_two, questioner) VALUES (?,?,?,?)';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['question'],
-            $this->request['alternative_one'],
-            $this->request['alternative_two'],
-            $this->request['username']
-        ]);
-
-        foreach ($receivers as $receiver) {
-            # code...
-        }
-    }
-
-	protected function getFriends() {
-		if( ! $this->isGet() )
-			return "Only accepts GET requests";
+            ! array_key_exists('receivers', $this->request) ||
+			! array_key_exists('username', $this->request)) {
 			
-		if( ! array_key_exists('username', $this->request) ){
-            return "Request on wrong form. Parameters not recognized.";
-        } 
-
-        global $dbh;
-
-		$sql = 'SELECT userTwo FROM FriendsWith WHERE userOne =?' ;
+				return "Request on wrong form. Parameters not recognized.";
+				
+			} 
 		
-		$q = $dbh->prepare($sql);
-		$q->execute( [$this->request['username']]);
-		
-		$results = $q->fetchAll(PDO::FETCH_ASSOC);
-		
-		if (empty($results)) {
-			return "You have no friends!";
+			return createPoll( $this->request['question'], $this->request['alternative_one'], $this->request['alternative_two'], $this->request['receivers'], $this->request['username'] );
 		} else {
-			return $results;
-		}
+            throw new Exception("Endpoint not supporting used HTTP method", ERROR_NO_METHOD);
+            
+        }
 	}
-	
-    private function authenticatedUser(){
-        if( ! array_key_exists('username', $this->request) || ! array_key_exists('password', $this->request) ){
-            return "Request on wrong form. Parameters not recognized.";
-        } 
-
-        global $dbh;
-
-        $sql = 'SELECT COUNT(*) AS results FROM Users WHERE username = ? AND password = ?';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([$this->request['username'], $this->request['password']]);
-
-        $results = $q->fetch(PDO::FETCH_ASSOC)['results'];
-
-        return $results > 0;
-    }
 
     private function isPost(){
         return $this->method == 'POST';
+    }
+	
+	private function isGet() {
+		return $this->method == "GET";
+	}
+
+    private function isDelete(){
+        return $this->method == 'DELETE';
+    }
+
+    private function isPut(){
+        return $this->method == 'PUT';
     }
 	
 	private function isGet() {
