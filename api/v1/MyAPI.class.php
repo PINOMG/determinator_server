@@ -99,10 +99,10 @@ class MyAPI extends API
 		} elseif( $this->isDelete() ) {
 		
 			//Check parameters
-			if(! isset( $this->args[0] ) || ! array_key_exists('userTwo', $this->request) )
+			if(! isset( $this->args[0] ) || ! isset($this->args[1]) )
                 throw new Exception("Parameters not correct", ERROR_WRONG_PARAMS);
 			
-			return deleteFriend( $this->args[0], $this->request['userTwo'] );
+			return deleteFriend( $this->args[0], $this->args[1] );
 			
 		} else {
             throw new Exception("Endpoint not supporting used HTTP method", ERROR_NO_METHOD);
@@ -174,8 +174,4 @@ class MyAPI extends API
     private function isPut(){
         return $this->method == 'PUT';
     }
-	
-	private function isGet() {
-		return $this->method == "GET";
-	}
 }
