@@ -12,9 +12,8 @@ function getPolls($username) {
 	
 	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
 	
-	if( $result == 0 ){
-        return "User doesn't exists.";
-    }
+	if( $result == 0 )
+        throw new Exception("Provided user doesn't exist", 7);
 	
 	$sql = 'SELECT poll, answer 
 			FROM PollsAskedToUsers PATU

@@ -79,7 +79,9 @@ abstract class API
         if ((int)method_exists($this, $this->endpoint) > 0) {
             return $this->_response($this->{$this->endpoint}($this->args));
         }
-        return $this->_response("No Endpoint: $this->endpoint", 404);
+        
+        throw new Exception("Specified endpoint not found", ERROR_NO_ENDPOINT);
+        
     }
 
     public function getMethod(){

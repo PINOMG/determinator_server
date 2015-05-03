@@ -12,9 +12,8 @@ function getFriends($username) {
 	
 	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
 	
-	if( $result == 0 ){
-        return "User doesn't exists.";
-    }
+	if( $result == 0 )
+        throw new Exception("Provided user doesn't exist.", ERROR_USER_NOT_FOUND);
 	
 	// Get friends
 	$sql = 'SELECT userTwo AS user FROM FriendsWith WHERE userOne = ?
@@ -41,9 +40,8 @@ function addFriend($username, $userTwo) {
 	
 	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
 	
-	if( $result == 0 ){
-        return "User doesn't exists.";
-    }
+	if( $result == 0 )
+        throw new Exception("Provided user doesn't exist.", ERROR_USER_NOT_FOUND);
 	
 	//Check if userTwo exists
 	$sql = 'SELECT COUNT(*) AS result FROM Users WHERE username = ?';
@@ -53,9 +51,8 @@ function addFriend($username, $userTwo) {
 	
 	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
 	
-	if( $result == 0 ){
-        return "UserTwo doesn't exists.";
-    }
+	if( $result == 0 )
+        throw new Exception("Provided userTwo doesn't exist.", ERROR_USERTWO_NOT_FOUND);
 
 	//Check if userTwo already is a friend of the user
     $sql = 'SELECT COUNT(*) AS results FROM (
@@ -71,9 +68,8 @@ function addFriend($username, $userTwo) {
 
     $results = $q->fetch(PDO::FETCH_ASSOC)['results']; 
 
-    if( $results > 0 ){
-		return "Friends already exists";
-    } 
+    if( $results > 0 )
+		throw new Exception("Friends already exist.", ERROR_ALREADY_FRIENDS);
 	
 	//Add userTwo as a friend of the user
     $sql = 'INSERT INTO FriendsWith VALUES (?,?)';
@@ -95,9 +91,8 @@ function deleteFriend($username, $userTwo) {
 	
 	$result = $q->fetch(PDO::FETCH_ASSOC)['result'];
 	
-	if( $result == 0 ){
-        return "User doesn't exists.";
-    }
+	if( $result == 0 )
+        throw new Exception("Provided user doesn't exist.", ERROR_USER_NOT_FOUND);
 	
 	//First combination
     $sql = 'DELETE FROM FriendsWith WHERE userOne = ? AND userTwo = ?';
