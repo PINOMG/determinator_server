@@ -18,7 +18,7 @@ All passwords sent must be encrypted with the sha1-algorithm.
 | ------------- |-------------| ------------- | ------------- |
 |**GET** friend/*:user* | | friends |  Return all user friends|
 |**POST** friend/*:user* | friend |   | Add friend | 
-|**DELETE** friend/*:user* |friend|   |Delete friend connection|
+|**DELETE** friend/*:userone/:usertwo* |||Delete friend connection|
 	
 ###Login endpoint
 
@@ -70,7 +70,7 @@ object {
 Below is an example of a response from request **GET** *friend/Björn*.
 ```json
 {
-  "apiVersion":1,
+  "apiVersion":"1",
   "method":"friend.GET",
   "data": {
     "items": [ 
