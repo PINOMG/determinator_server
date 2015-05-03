@@ -174,4 +174,8 @@ class MyAPI extends API
     private function isPut(){
         return $this->method == 'PUT';
     }
+	
+	private function isGet() {
+		return $this->method == "GET";
+	}
 }
