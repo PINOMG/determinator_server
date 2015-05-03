@@ -119,33 +119,34 @@ class MyAPI extends API
         }
     }
 
-    protected function createPoll(){
-        if( ! $this->isPost() )
-            return "Only accepts POST requests";
-
-        if( ! array_key_exists('question', $this->request) || 
+	//Poll endpoint, for getting and creating polls
+	protected function poll() {
+		
+		if( $this->isGet() ) { // Get polls
+			
+			// Check parameters
+			if(! isset( $this->args[0] ) )
+                return "Wrong Parameters";
+				
+			return getPolls($this->args[0]);
+		
+		} elseif( $this->isPost() ) { // Create poll
+			
+			//Check parameters
+			if( ! array_key_exists('question', $this->request) || 
             ! array_key_exists('alternative_one', $this->request) ||
             ! array_key_exists('alternative_two', $this->request) ||
-            ! array_key_exists('receivers', $this->request) ){
-            return "Request on wrong form. Parameters not recognized.";
-        } 
-
-        $receivers = json_decode($this->request['receivers']);
-
-        $sql = 'INSERT INTO Polls (question, alternative_one, alternative_two, questioner) VALUES (?,?,?,?)';
-
-        $q = $dbh->prepare($sql);
-        $q->execute([
-            $this->request['question'],
-            $this->request['alternative_one'],
-            $this->request['alternative_two'],
-            $this->request['username']
-        ]);
-
-        foreach ($receivers as $receiver) {
-            # code...
-        }
-    }
+            ! array_key_exists('receivers', $this->request) ||
+			! array_key_exists('username', $this->request)) {
+			
+				return "Request on wrong form. Parameters not recognized.";
+				
+			} 
+		
+			return createPoll( $this->request['question'], $this->request['alternative_one'], $this->request['alternative_two'], $this->request['receivers'], $this->request['username'] );
+			
+		}
+	}
 
     private function isPost(){
         return $this->method == 'POST';
