@@ -135,7 +135,8 @@ class MyAPI extends API
 			
 			// Check parameters
 			if(! isset( $this->args[0] ) )
-                return "Wrong Parameters";
+                throw new Exception("Parameters not correct", 1);
+                
 				
 			return getPolls($this->args[0]);
 		
@@ -147,8 +148,8 @@ class MyAPI extends API
             ! array_key_exists('alternative_two', $this->request) ||
             ! array_key_exists('receivers', $this->request) ||
 			! array_key_exists('username', $this->request)) {
-			
-				return "Request on wrong form. Parameters not recognized.";
+			     throw new Exception("Parameters not correct", 1);
+                 
 				
 			} 
 		

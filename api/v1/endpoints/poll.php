@@ -15,7 +15,7 @@ function getPolls($username) {
 	if( $result == 0 )
         throw new Exception("Provided user doesn't exist", 7);
 	
-	$sql = 'SELECT poll, answer 
+	$sql = 'SELECT poll AS id, answer, question, alternative_one, alternative_two
 			FROM PollsAskedToUsers PATU
 			LEFT JOIN Polls P
 			ON PATU.poll = P.id
