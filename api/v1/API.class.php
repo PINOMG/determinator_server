@@ -1,4 +1,8 @@
 <?php 
+/**
+ *  The backbone of this file is created by Corey Maynard at http://coreymaynard.com/blog/creating-a-restful-api-with-php/
+ */
+
 abstract class API
 {
     /**
