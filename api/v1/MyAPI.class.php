@@ -61,6 +61,10 @@ class MyAPI extends API
 
             return deleteUser($this->args[0]);
 
+        } elseif ( $this->isGet()) {
+
+            return getUsers();
+
         } else {
             throw new Exception("Endpoint not supporting used HTTP method", ERROR_NO_METHOD);
         }

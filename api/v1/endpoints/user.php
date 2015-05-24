@@ -81,3 +81,14 @@ function deleteAllFriends($username){
 
     return "Success";
 }
+
+function getUsers(){
+    global $dbh;
+
+    $sql = 'SELECT username FROM Users';
+
+    $q = $dbh->prepare($sql);
+    $q->execute();
+
+    return $q->fetchAll(PDO::FETCH_COLUMN, 0);
+}

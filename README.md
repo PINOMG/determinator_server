@@ -11,6 +11,7 @@ All passwords sent must be encrypted with the sha1-algorithm.
 |**POST** user  |username, password| |  Create new user|
 |**PUT** user/*:user* |newPassword |   |Change password on current user | 
 |**DELETE** user/*:user* |         |   |Delete user|
+|**GET** user | | users | Get all users. |
 
 ###Friend endpoint
 
