@@ -1,8 +1,6 @@
 # determinator_server
 All requests are sent to base_url/[method_name], where [method_name] is replaced by the methods below.
 
-All passwords sent must be encrypted with the sha1-algorithm.
-
 ##Requests
 ###User endpoint
 
