@@ -5,6 +5,8 @@ All requests are sent to base_url/[method_name], where [method_name] is replaced
 2. Import the *pinomg.sql* code to your database. *Note: This contains some example users aswell.*
 3. Rename the */api/v1/connect.example.php* to */api/v1/connect.php* and follow the instructions in the file.
 
+*Note: The ER diagramme of the database is available in the docs/ folder.*
+
 ####Dependencies
 PHP version >= 5.4.0 
 
