@@ -19,14 +19,14 @@ PHP version >= 5.4.0
 |**POST** user  |username, password| |  Create new user|
 |**PUT** user/*:user* |newPassword |   |Change password on current user | 
 |**DELETE** user/*:user* |         |   |Delete user|
-|**GET** user | | users | Get all users. |
+|**GET** user | | users | Get all users. (Array of username strings) |
 
 ###Friend endpoint
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
-|**GET** friend/*:user* | | friends |  Return all user friends|
-|**POST** friend/*:user* | friend |   | Add friend | 
+|**GET** friend/*:user* | | users |  Return all user's friends (Array of username strings)|
+|**POST** friend/*:user* | users |   | Add friend (Array of username strings)| 
 |**DELETE** friend/*:userone/:usertwo* |||Delete friend connection|
 	
 ###Login endpoint
@@ -39,7 +39,7 @@ PHP version >= 5.4.0
 
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
-|**GET** poll/*:user* | | polls |  Get polls to user|
+|**GET** poll/*:user* | | polls |  Get polls to user (Array of JSON poll objects)|
 |**POST** poll | question, alternative_one, alternative_two, receivers, questioner |   | Add a new poll | 
 
 ###Answer endpoint
