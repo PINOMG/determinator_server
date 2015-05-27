@@ -26,7 +26,7 @@ PHP version >= 5.4.0
 | METHOD        | INPUT       | RETURN        | DESCRIPTION   |   
 | ------------- |-------------| ------------- | ------------- |
 |**GET** friend/*:user* | | users |  Return all user's friends (Array of username strings)|
-|**POST** friend/*:user* | users |   | Add friend (Array of username strings)| 
+|**POST** friend/*:user* | username |   | Add friend| 
 |**DELETE** friend/*:userone/:usertwo* |||Delete friend connection|
 	
 ###Login endpoint
