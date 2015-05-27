@@ -1,29 +1,17 @@
--- phpMyAdmin SQL Dump
--- version 4.0.10deb1
--- http://www.phpmyadmin.net
---
--- Värd: localhost
--- Skapad: 28 apr 2015 kl 13:40
--- Serverversion: 5.5.43-0ubuntu0.14.04.1
--- PHP-version: 5.5.9-1ubuntu4.9
+-- The SQL file for the determinator server database
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Databas: `pinomg`
---
-
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `FriendsWith`
+-- Table structure `FriendsWith`
 --
 
 CREATE TABLE IF NOT EXISTS `FriendsWith` (
@@ -33,17 +21,10 @@ CREATE TABLE IF NOT EXISTS `FriendsWith` (
   KEY `userTwo` (`userTwo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumpning av Data i tabell `FriendsWith`
---
-
-INSERT INTO `FriendsWith` (`userOne`, `userTwo`) VALUES
-('Martin', 'Patrik');
-
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `Polls`
+-- Table structure `Polls`
 --
 
 CREATE TABLE IF NOT EXISTS `Polls` (
@@ -60,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `Polls` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `PollsAskedToUsers`
+-- Table structure `PollsAskedToUsers`
 --
 
 CREATE TABLE IF NOT EXISTS `PollsAskedToUsers` (
@@ -74,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `PollsAskedToUsers` (
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `Users`
+-- Table structure `Users`
 --
 
 CREATE TABLE IF NOT EXISTS `Users` (
@@ -84,36 +65,24 @@ CREATE TABLE IF NOT EXISTS `Users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumpning av Data i tabell `Users`
---
-
-INSERT INTO `Users` (`username`, `password`) VALUES
-('0af53c5335a8b8a831e066871e89356d51297201', '123'),
-('Ebba', '123'),
-('Martin', '123'),
-('Olle', '123'),
-('Patrik', '123'),
-('Philip', '123');
-
---
--- Restriktioner för dumpade tabeller
+-- Restrictions for tables
 --
 
 --
--- Restriktioner för tabell `FriendsWith`
+-- Restriction for table `FriendsWith`
 --
 ALTER TABLE `FriendsWith`
   ADD CONSTRAINT `FriendsWith_ibfk_1` FOREIGN KEY (`userOne`) REFERENCES `Users` (`username`),
   ADD CONSTRAINT `FriendsWith_ibfk_2` FOREIGN KEY (`userTwo`) REFERENCES `Users` (`username`);
 
 --
--- Restriktioner för tabell `Polls`
+-- Restriction for table `Polls`
 --
 ALTER TABLE `Polls`
   ADD CONSTRAINT `Polls_ibfk_1` FOREIGN KEY (`questioner`) REFERENCES `Users` (`username`);
 
 --
--- Restriktioner för tabell `PollsAskedToUsers`
+-- Restriction for table `PollsAskedToUsers`
 --
 ALTER TABLE `PollsAskedToUsers`
   ADD CONSTRAINT `PollsAskedToUsers_ibfk_1` FOREIGN KEY (`user`) REFERENCES `Users` (`username`),
