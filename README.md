@@ -8,6 +8,8 @@ All requests are sent to base_url/[method_name], where [method_name] is replaced
 
 *Note: The ER diagramme of the database is available in the docs/ folder.*
 
+**A live version of this API is available by the PINOMG organization at http://79.99.3.112/pinomg/.**
+
 ####Dependencies
 PHP version >= 5.4.0 
 
